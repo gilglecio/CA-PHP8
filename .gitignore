@@ -1,0 +1,14 @@
+/**/.idea/
+/**/.DS_Store
+.env
+vendor
+/**/docker/redis/*
+/**/docker/mysql/*
+/**/docker/apache/logs/*
+/**/docker/nginx/logs/*
+!/**/docker/mysql/config
+!/**/docker/mysql/database/.gitkeep
+!/**/docker/postgres/.gitkeep
+!/**/docker/apache/logs/.gitkeep
+!/**/docker/nginx/logs/.gitkeep
+.phpunit.result.cache

@@ -1,0 +1,19 @@
+{
+    "routes": [
+        {
+            "group": {
+                "prefix": "/v1/aditamento-plano",
+                "middlewares": [
+                    "App\\Infra\\Middleware\\JWT"
+                ],
+                "routes": [
+                    {
+                        "path": "/proposta",
+                        "method": "GET",
+                        "callback": "App\\Infra\\Controller\\AditamentoPlanoController@salvarProprosta"
+                    }
+                ]
+            }
+        }
+    ]
+}

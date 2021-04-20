@@ -1,0 +1,82 @@
+version: '3.7'
+
+networks:
+  docker-php8-network:
+    driver: bridge
+
+services:
+  php:
+    build: ./docker/php
+    restart: always
+    tty: true
+    container_name: docker-php8-php
+    networks:
+      - docker-php8-network
+    ports:
+      - '9000:9000'
+    volumes:
+      - .:/home/app
+
+  nginx:
+    build: ./docker/nginx
+    container_name: docker-php8-nginx
+    restart: always
+    tty: true
+    depends_on:
+      - php
+    ports:
+      - "4002:80"
+      - "433:433"
+    volumes:
+      - .:/home/app
+    networks:
+      - docker-php8-network
+
+  mysql:
+    image: mysql:8
+    tty: true
+    restart: always
+    container_name: docker-php8-mysql
+    networks:
+      - docker-php8-network
+    ports:
+      - '3318:3306'
+    volumes:
+      - './docker/mysql/config/mysql.cnf:/etc/mysql/conf.d/custom.cnf:ro'
+      - './docker/mysql/database:/var/lib/mysql'
+    environment:
+      - MYSQL_PASSWORD=root
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=development
+
+  #  apache:
+  #    build: ./docker/apache
+  #    restart: always
+  #    container_name: docker-php8-apache
+  #    networks:
+  #      - docker-php8-network
+  #    depends_on:
+  #      - php
+  #      - mariadb
+  #    ports:
+  #      - '80:80'
+  #      - '443:443'
+  #    volumes:
+  #      - .:/home/app
+
+  phpmyadmin:
+    image: library/phpmyadmin
+    container_name: docker-php8-phpmyadmin
+    tty: true
+    networks:
+      - docker-php8-network
+    depends_on:
+      - mysql
+    environment:
+      PMA_USER: root
+      PMA_PASSWORD: root
+      PMA_HOSTS: mysql
+      PMA_PORT: 3318
+      PMA_ARBITRARY: 1
+    ports:
+      - '4003:80'
